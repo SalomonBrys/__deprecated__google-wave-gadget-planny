@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+	
+	<ModulePrefs title="Planny Gadget">
+		<Require feature="wave"/>
+		<Require feature="dynamic-height"/>
+	</ModulePrefs>
+	
+	<content type="html">
+		<![CDATA[
+			<style>
+				.usertd
+				{
+					width: 200px;
+				}
+				.month, .day, .hour
+				{
+					height: 40px;
+					border: solid #7C7C7C;
+				}
+			</style>
+			<table>
+				<tr>
+					<td class="usertd">&nbsp;</td>
+					<td class="month" colspan="5">October 2009</td>
+				</tr>
+				<tr>
+					<td class="usertd">&nbsp;</td>
+					<td class="day" colspan="2">Thu 01</td>
+					<td class="day" colspan="3">Sat 03</td>
+				</tr>
+				<tr>
+					<td class="hour">15h30</td>
+					<td class="hour">19h30</td>
+					<td class="hour">08h00</td>
+					<td class="hour">10h00</td>
+					<td class="hour">12h00</td>
+				</tr>
+			</table>
+		]]>
+	</content>
+	
+</Module>
