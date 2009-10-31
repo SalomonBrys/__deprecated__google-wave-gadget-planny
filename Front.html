@@ -948,19 +948,23 @@
 			
 			function deleteMonth(month)
 			{
-				if (planny[month] && confirm("Are you sure you want to delete this month ?"))
+				if (planny[month] && confirm("Are you sure you want to delete " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
 					delete planny[month];
 				createPlannyTable();
 			}
 			function deleteDay(month, day)
 			{
-				if (planny[month] && planny[month][day] && confirm("Are you sure you want to delete this day ?"))
+				var date = new Date();
+				date.setFullYear(parseInt(month.substr(0, 4)), parseInt(month.substr(4, 2)) - 1, parseInt(day));
+				if (planny[month] && planny[month][day] && confirm("Are you sure you want to delete " + dayArrayLong[date.getDay()] + " " + day + " " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
 					delete planny[month][day];
 				createPlannyTable();
 			}
 			function deleteTime(month, day, time)
 			{
-				if (planny[month] && planny[month][day] && planny[month][day][time] && confirm("Are you sure you want to delete this time ?"))
+				var date = new Date();
+				date.setFullYear(parseInt(month.substr(0, 4)), parseInt(month.substr(4, 2)) - 1, parseInt(day));
+				if (planny[month] && planny[month][day] && planny[month][day][time] && confirm("Are you sure you want to delete " + time.substr(0, 2) + "h" + time.substr(2, 2) + " in " + dayArrayLong[date.getDay()] + " " + day + " " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
 					delete planny[month][day][time];
 				createPlannyTable();
 			}
