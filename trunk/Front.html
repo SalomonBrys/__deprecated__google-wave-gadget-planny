@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
+		<script type="text/javascript">gadgets = {window: { adjustHeight: function(){} }}</script>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>This is an example of the front</title>
 	</head>
@@ -473,7 +474,7 @@
 				font-size: 12px;
 				text-align: center;
 				color: #505050;
-				background-color: #ece9d8;
+				background-color: #d8ece9;
 				border: 1px solid #AAAAAA;
 			}
 			
@@ -699,6 +700,15 @@
 				text-decoration: line-through;
 				cursor: pointer;
 			}
+
+			table#planny.small td
+			{
+				font-size: 8px;
+				height: 10px;
+				width: 10px;
+				padding: 0;
+			}
+
 		</style>
 		<script type="text/javascript">
 			planny = {};
@@ -707,11 +717,15 @@
 			AddDate = {
 				show: function()
 				{
+					document.getElementById('planny').className = "small";
+					
 					document.getElementById('addDateSelect').innerHTML = "<option>Select a date</option>";
 					document.getElementById('addDateSelect').disabled = true;
 					
 					document.getElementById('addDateText').style.display = "none";
 					document.getElementById('addDateForm').style.display = "block";
+					
+					gadgets.window.adjustHeight();
 				},
 				fillSelect: function()
 				{
@@ -759,15 +773,21 @@
 					document.getElementById('addDateDivText').innerHTML += "<p onclick='AddDate.removeTime(this);'>" + document.getElementById("ADate").value + " " + select.options[select.selectedIndex].value + "</p>";
 					document.getElementById('selectOption').selected = true;
 					document.getElementById('addDateButton').style.display = "block";
+
+					gadgets.window.adjustHeight();
 				},
 				hide: function()
 				{
 					AddDate.selectIsFilled = false;
+
+					document.getElementById('planny').className = "";
 					
 					document.getElementById('addDateText').style.display = "block";
 					document.getElementById('addDateForm').style.display = "none";
 					document.getElementById('addDateButton').style.display = "none";
 					document.getElementById('addDateDivText').innerHTML = "";
+
+					gadgets.window.adjustHeight();
 				},
 				add: function()
 				{
@@ -944,6 +964,7 @@
 						table.appendChild(tr);
 					}
 				}
+				gadgets.window.adjustHeight();
 			}
 			
 			function deleteMonth(month)
