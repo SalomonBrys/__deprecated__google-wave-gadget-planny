@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension
+    name="Planny Gadget"
+    thumbnailUrl="http://google-wave-gadget-planny.googlecode.com/svn/trunk/preview.png"
+    description="Indicates when you and your team as free for planning an events. Same principle as doodle.com.">
+  <author name="Salomon BRYS"/>
+  <menuHook location="toolbar" text="Add Planny Gadget"
+      iconUrl="http://google-wave-gadget-planny.googlecode.com/svn/trunk/icon.png">
+    <insertGadget url="http://google-wave-gadget-planny.googlecode.com/svn/branches/stable/planny.xml"/>
+  </menuHook>
+</extension>
