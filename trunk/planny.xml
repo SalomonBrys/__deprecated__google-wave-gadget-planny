@@ -1064,10 +1064,12 @@
 						if (displayname.search('@') != -1)
 							displayname = displayname.substr(0, displayname.search('@'));
 						td.innerHTML =  "<img src='"+url+"' /> <b>" + displayname + "</b>";
-						td.onclick = function() { toggleDeclare(); }
 
 						if (wave.getViewer() && wave.getViewer().getId() == id)
+						{
+							td.onclick = function() { toggleDeclare(); }
 							td.className += " self";
+						}
 						
 						tr.appendChild(td);
 					}
