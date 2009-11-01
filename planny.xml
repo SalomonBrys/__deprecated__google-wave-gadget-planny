@@ -1018,13 +1018,15 @@
 										td.innerHTML = "&nbsp;";
 									}
 									
-									td.month = month;
-									td.day = day;
-									td.time = time;
-									td.onclick = function() { toggleOK(this); }
-									
 									if (wave.getViewer() && wave.getViewer().getId() == wave.getParticipants()[i].getId())
+									{
+										td.month = month;
+										td.day = day;
+										td.time = time;
+										td.onclick = function() { toggleOK(this); }
+
 										td.className += " self";
+									}
 									tr.appendChild(td);
 								}
 						
