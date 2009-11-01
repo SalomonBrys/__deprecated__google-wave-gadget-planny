@@ -999,7 +999,7 @@
 					var participants = wave.getParticipants();
 					participants.sort(function(left, right)
 					{
-						return left.getDisplayName() > right.getDisplayName();
+						return left.getDisplayName().toLowerCase() > right.getDisplayName().toLowerCase();
 					});
 					for (var i = 0; i < participants.length; ++i) 
 					{
