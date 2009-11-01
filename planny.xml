@@ -627,12 +627,16 @@
 			
 			table#planny td.user
 			{
-				width: 180px;
+				width: 200px;
 				background-color: #ECECEC;
 				text-align: right;
 				vertical-align: middle;
 			}
 			
+			table#planny td.user.self
+			{
+				background-color: #CCCCCC;
+			}
 			table#planny td.user img
 			{
 				width: 30px;
@@ -803,7 +807,7 @@
 				selectIsFilled: false,
 				dateHasChanged: function()
 				{
-					if (!AddDate.selectIsFilled) 
+					if (!AddDate.selectIsFilled)
 					{
 						AddDate.fillSelect();
 						AddDate.selectIsFilled = true;
@@ -992,13 +996,22 @@
 				
 				if (wave.getParticipants())
 				{
-					for (var i = 0; i < wave.getParticipants().length; ++i) 
+					var participants = wave.getParticipants();
+					participants.sort(function(left, right)
+					{
+						return left.getDisplayName() > right.getDisplayName();
+					});
+					for (var i = 0; i < participants.length; ++i) 
 					{
 						var tr = document.createElement('tr');
 						{
 							var td = document.createElement('td');
 							td.className = "user";
-							td.innerHTML =  "<img src='"+wave.getParticipants()[i].getThumbnailUrl()+"' /> <b>" + wave.getParticipants()[i].getDisplayName() + "</b>";
+							td.innerHTML =  "<img src='"+participants[i].getThumbnailUrl()+"' /> <b>" + participants[i].getDisplayName() + "</b>";
+
+							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
+								td.className += " self";
+							
 							tr.appendChild(td);
 						}
 						
@@ -1007,7 +1020,7 @@
 								for (var time in planny[month][day]) 
 								{
 									var td = document.createElement('td');
-									if (findInArray(planny[month][day][time], wave.getParticipants()[i].getId()) != -1) 
+									if (findInArray(planny[month][day][time], participants[i].getId()) != -1) 
 									{
 										td.className = "OK";
 										td.innerHTML = "OK";
@@ -1018,7 +1031,7 @@
 										td.innerHTML = "&nbsp;";
 									}
 									
-									if (wave.getViewer() && wave.getViewer().getId() == wave.getParticipants()[i].getId())
+									if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
 									{
 										td.month = month;
 										td.day = day;
