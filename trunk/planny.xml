@@ -992,6 +992,13 @@
 					delete planny[month][day][time];
 				createPlannyTable();
 			}
+			
+			function showCal()
+			{
+				displayDatePicker('ADate', false, 'dmy', '.', AddDate.dateHasChanged);
+				gadgets.window.adjustHeight();
+			}
+			
 		</script>
 		<table id="planny">
 		</table>
@@ -999,7 +1006,7 @@
 			<button id="addDateText" style="font-size: 10px; border:none; background: none; cursor: pointer;" onClick="AddDate.show()">Add date</button>
 			<div id="addDateForm" style="display: none;">
 				<div id="addDateDivText"></div>
-				<input name="ADate" id="ADate" readonly="readonly" style="width: 80px;" onclick="displayDatePicker('ADate', false, 'dmy', '.', AddDate.dateHasChanged);" value="Date"/>
+				<input name="ADate" id="ADate" readonly="readonly" style="width: 80px;" onclick="showCal()" value="Date"/>
 				<select id="addDateSelect" style="width: 150px;" onchange="AddDate.timeHasChanged()"></select>
 				<button type="button" id="addDateButton" style="display: none; margin: 10px auto 5px auto;" onclick="AddDate.add()">Add these dates</button>
 				<button type="button" style="display: block; margin: 10px auto 5px auto;" onclick="AddDate.hide()">Cancel</button>
