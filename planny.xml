@@ -683,7 +683,7 @@
 			
 			table#planny td.self.KO:hover
 			{
-				border: dashed #44CC44 2px;
+				border: dashed #22AA22 2px;
 				padding: 0;
 			}
 			
