@@ -857,7 +857,6 @@
 						
 					datetimes.sort();
 					arrayToPlanny(datetimes);
-					//createPlannyTable();
 					AddDate.hide();
 					wave.getState().submitValue('planny', plannyToArray().join(','));
 				}
@@ -899,18 +898,18 @@
 				}
 			}
 			
+			function findInArray(array, value)
+			{
+				for (var i = 0; i < array.length; ++i) 
+					if (array[i] == value) 
+						return i;
+				return -1;
+			}
+
 			function createPlannyTable()
 			{
 				var table = document.getElementById('planny');
 				table.innerHTML = "";
-				
-				function findInArray(array, value)
-				{
-					for (var i = 0; i < array.length; ++i) 
-						if (array[i] == value) 
-							return true;
-					return false;
-				}
 
 				function addUserInvisibleTd(tr, withButton)
 				{
@@ -1008,7 +1007,7 @@
 								for (var time in planny[month][day]) 
 								{
 									var td = document.createElement('td');
-									if (findInArray(planny[month][day][time], wave.getParticipants()[i].getId())) 
+									if (findInArray(planny[month][day][time], wave.getParticipants()[i].getId()) != -1) 
 									{
 										td.className = "OK";
 										td.innerHTML = "OK";
@@ -1018,6 +1017,12 @@
 										td.className = "KO";
 										td.innerHTML = "&nbsp;";
 									}
+									
+									td.month = month;
+									td.day = day;
+									td.time = time;
+									td.onclick = function() { toggleOK(this); }
+									
 									if (wave.getViewer() && wave.getViewer().getId() == wave.getParticipants()[i].getId())
 										td.className += " self";
 									tr.appendChild(td);
@@ -1029,6 +1034,19 @@
 				gadgets.window.adjustHeight();
 			}
 			
+			function toggleOK(td)
+			{
+				if (planny[td.month] && planny[td.month][td.day] && planny[td.month][td.day][td.time])
+				{
+					var pos = findInArray(planny[td.month][td.day][td.time], wave.getViewer().getId());
+					if (pos == -1)
+						planny[td.month][td.day][td.time].push(wave.getViewer().getId());
+					else
+						delete planny[td.month][td.day][td.time][pos];
+				}
+				wave.getState().submitValue('planny', plannyToArray().join(','));
+			}
+			
 			function deleteMonth(month)
 			{
 				if (wave.getMode() != wave.Mode.EDIT)
@@ -1036,7 +1054,6 @@
 				if (planny[month] && confirm("Are you sure you want to delete " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
 				{
 					delete planny[month];
-					//createPlannyTable();
 					wave.getState().submitValue('planny', plannyToArray().join(','));
 				}
 			}
@@ -1049,7 +1066,6 @@
 				if (planny[month] && planny[month][day] && confirm("Are you sure you want to delete " + dayArrayLong[date.getDay()] + " " + day + " " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
 				{
 					delete planny[month][day];
-					//createPlannyTable();
 					wave.getState().submitValue('planny', plannyToArray().join(','));
 				}
 			}
@@ -1062,7 +1078,6 @@
 				if (planny[month] && planny[month][day] && planny[month][day][time] && confirm("Are you sure you want to delete " + time.substr(0, 2) + "h" + time.substr(2, 2) + " in " + dayArrayLong[date.getDay()] + " " + day + " " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
 				{
 					delete planny[month][day][time];
-					//createPlannyTable();
 					wave.getState().submitValue('planny', plannyToArray().join(','));
 				}
 			}
@@ -1089,6 +1104,7 @@
 			
 			function modeChanged()
 			{
+				createPlannyTable();
 				if (wave.getMode() == wave.Mode.DIFF_ON_OPEN)
 					return ;
 				if (wave.getMode() == wave.Mode.EDIT)
