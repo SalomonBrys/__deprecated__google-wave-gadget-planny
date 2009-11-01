@@ -608,7 +608,7 @@
 				background-color: #CCCCCC;
 			}
 			
-			table#planny td.month
+			table#planny td.day
 			{
 				background-color: #DCDCDC;
 			}
