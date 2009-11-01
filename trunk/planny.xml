@@ -2,7 +2,7 @@
 <Module>
 	
 	<ModulePrefs title="Planny Gadget">
-		<Require feature="wave"/>
+		<Require feature="wave-preview"/>
 		<Require feature="dynamic-height"/>
 	</ModulePrefs>
 	
@@ -384,11 +384,7 @@
 			{
 				var targetDateField = document.getElementsByName(dateFieldName).item(0);
 				if (dateString) 
-				{
 					targetDateField.value = dateString;
-					if (callBack) 
-						callBack();
-				}
 				
 				var pickerDiv = document.getElementById(datePickerDivID);
 				pickerDiv.style.visibility = "hidden";
@@ -402,6 +398,9 @@
 				// (note that this will only run if the user actually selected a date from the datepicker)
 				if ((dateString) && (typeof(datePickerClosed) == "function")) 
 					datePickerClosed(targetDateField);
+
+				if (callBack) 
+					callBack();
 			}
 			
 			
@@ -619,7 +618,7 @@
 				background-color: #ECECEC;
 			}
 			
-			table#planny td.month:hover, table#planny td.day:hover, table#planny td.time:hover
+			table#planny.edit td.month:hover, table#planny.edit td.day:hover, table#planny.edit td.time:hover
 			{
 				color: red;
 				text-decoration: line-through;
@@ -628,9 +627,26 @@
 			
 			table#planny td.user
 			{
-				width: 150px;
+				width: 180px;
 				background-color: #ECECEC;
 				text-align: right;
+				vertical-align: middle;
+			}
+			
+			table#planny td.user img
+			{
+				width: 30px;
+				height: 30px;
+				float: right;
+				padding-left: 5px;
+			}
+
+			table#planny td.user b
+			{
+				display: block;
+				padding-top: 7px;
+				float: right;
+				font-size: 13px;
 			}
 			
 			table#planny td.OK
@@ -680,6 +696,14 @@
 				overflow:
 			}
 			
+			button#addDateButton
+			{
+				font-size: 10px;
+				border:solid black 1px;
+				background: #ECECEC;
+				cursor: pointer;
+			}
+			
 			div#addDate:hover
 			{
 				background-color: #CCCCCC;
@@ -712,6 +736,26 @@
 				padding: 0;
 			}
 
+			table#planny.small td.user
+			{
+				width: 90px;
+			}
+
+			table#planny.small td.user img
+			{
+				width: 10px;
+				height: 10px;
+				padding-top: 1px;
+				padding-left: 1px;
+			}
+
+			table#planny.small td.user b
+			{
+				padding-top: 1px;
+				float: right;
+				font-size: 8px;
+			}
+
 		</style>
 		<script type="text/javascript">
 			planny = {};
@@ -725,8 +769,8 @@
 					document.getElementById('addDateSelect').innerHTML = "<option>Select a date</option>";
 					document.getElementById('addDateSelect').disabled = true;
 					
-					document.getElementById('addDateText').style.display = "none";
-					document.getElementById('addDateForm').style.display = "block";
+					document.getElementById('addDateButton').style.display = "none";
+					document.getElementById('addDate').style.display = "block";
 					
 					gadgets.window.adjustHeight();
 				},
@@ -776,7 +820,7 @@
 					var select = document.getElementById('addDateSelect');
 					document.getElementById('addDateDivText').innerHTML += "<p onclick='AddDate.removeTime(this);'>" + document.getElementById("ADate").value + " " + select.options[select.selectedIndex].value + "</p>";
 					document.getElementById('selectOption').selected = true;
-					document.getElementById('addDateButton').style.display = "block";
+					document.getElementById('addDateValidButton').style.display = "block";
 
 					gadgets.window.adjustHeight();
 				},
@@ -784,12 +828,13 @@
 				{
 					AddDate.selectIsFilled = false;
 
-					document.getElementById('planny').className = "";
+					document.getElementById('planny').className = "edit";
 					
-					document.getElementById('addDateText').style.display = "block";
-					document.getElementById('addDateForm').style.display = "none";
-					document.getElementById('addDateButton').style.display = "none";
+					document.getElementById('addDateButton').style.display = "inline";
+					document.getElementById('addDate').style.display = "none";
 					document.getElementById('addDateDivText').innerHTML = "";
+					document.getElementById('addDateValidButton').style.display = "none";
+					document.getElementById('ADate').value = "Date";
 
 					gadgets.window.adjustHeight();
 				},
@@ -797,7 +842,7 @@
 				{
 					var datetimes = new Array();
 					var els = document.getElementById('addDateDivText').childNodes;
-					for (i = 0; i < els.length; ++i) 
+					for (var i = 0; i < els.length; ++i) 
 						if (els[i].tagName == 'p' || els[i].tagName == 'P')
 						{
 							var dt = els[i].innerHTML.split(' ');
@@ -805,21 +850,33 @@
 							time = dt[1].split('h');
 							datetimes.push(date[2] + date[1] + ' ' + date[0] + ' ' + time[0] + time[1]);
 						}
-					for (var month in planny) 
-						for (var day in planny[month]) 
-							for (var time in planny[month][day]) 
-							{
-								var txt = month + ' ' + day + ' ' + time
-								if (planny[month][day][time].length != 0)
-									txt += ' ' + planny[month][day][time].join(':');
-								datetimes.push(txt);
-							}
+
+					array = plannyToArray();
+					for (var i = 0; i < array.length; ++i)
+						datetimes.push(array[i]);
+						
 					datetimes.sort();
 					arrayToPlanny(datetimes);
-					createPlannyTable();
+					//createPlannyTable();
 					AddDate.hide();
+					wave.getState().submitValue('planny', plannyToArray().join(','));
 				}
 			};
+			
+			function plannyToArray()
+			{
+				var array = new Array();
+				for (var month in planny) 
+					for (var day in planny[month]) 
+						for (var time in planny[month][day]) 
+						{
+							var txt = month + ' ' + day + ' ' + time
+							if (planny[month][day][time].length != 0)
+								txt += ' ' + planny[month][day][time].join(':');
+							array.push(txt);
+						}
+				return array;
+			}
 			
 			function arrayToPlanny(array)
 			{
@@ -854,20 +911,26 @@
 							return true;
 					return false;
 				}
-				
-				function addUserInvisibleTd(tr)
+
+				function addUserInvisibleTd(tr, withButton)
 				{
 					var td = document.createElement('td');
 					td.className = "invisible";
-					td.innerHTML = "&nbsp;";
+					if (withButton)
+						td.innerHTML = "<button id='addDateButton' onClick='AddDate.show()'" + ( (wave.getMode() != wave.Mode.EDIT) ? "style='display: none;'" : "" ) + ">Add date</button>";
+					else
+						td.innerHTML = "&nbsp;";
 					tr.appendChild(td);
 				}
 				
+				var nm = 0;
 				{
 					var tr = document.createElement('tr');
-					addUserInvisibleTd(tr);
+					
+					addUserInvisibleTd(tr, true);
 					for (var month in planny) 
 					{
+						++nm;
 						var td = document.createElement('td');
 						td.innerHTML = monthArrayMed[parseInt(month.substr(4, 2)) - 1] + ".<br />" + month.substr(0, 4);
 						td.className = "month";
@@ -882,66 +945,61 @@
 					}
 					table.appendChild(tr);
 				}
-				
+
+				if (nm != 0)
 				{
-					var tr = document.createElement('tr');
-					addUserInvisibleTd(tr);
-					for (var month in planny) 
-						for (var day in planny[month]) 
-						{
-							var td = document.createElement('td');
-							var date = new Date();
-							date.setFullYear(parseInt(month.substr(0, 4)), parseInt(month.substr(4, 2)) - 1, parseInt(day));
-							td.innerHTML = dayArrayMed[date.getDay()] + ".<br />" + day;
-							td.className = "day";
-							td.month = month;
-							td.day = day;
-							td.onclick = function() { deleteDay(this.month, this.day); };
-							var n = 0;
-							for (var time in planny[month][day]) 
-								++n;
-							td.colSpan = n;
-							tr.appendChild(td);
-						}
-					table.appendChild(tr);
-				}
-				
-				{
-					var tr = document.createElement('tr');
-					addUserInvisibleTd(tr);
-					for (var month in planny) 
-						for (var day in planny[month]) 
-							for (var time in planny[month][day]) 
-							{
-								var td = document.createElement('td');
-								td.innerHTML = time.substr(0, 2) + "h" + time.substr(2, 2);
-								td.className = "time";
-								td.month = month;
-								td.day = day;
-								td.time = time;
-								td.onclick = function() { deleteTime(this.month, this.day, this.time); };
-								tr.appendChild(td);
-							}
-					table.appendChild(tr);
-				}
-				
-				{
-					var users = new Array();
-					for (var month in planny) 
-						for (var day in planny[month]) 
-							for (var time in planny[month][day]) 
-								for (var i = 0; i < planny[month][day][time].length; ++i) 
-									if (!findInArray(users, planny[month][day][time][i])) 
-										users.push(planny[month][day][time][i]);
-					users.sort();
-					
-					for (var i = 0; i < users.length; ++i) 
 					{
 						var tr = document.createElement('tr');
-									{
+						addUserInvisibleTd(tr);
+						for (var month in planny) 
+							for (var day in planny[month]) 
+							{
+								var td = document.createElement('td');
+								var date = new Date();
+								date.setFullYear(parseInt(month.substr(0, 4)), parseInt(month.substr(4, 2)) - 1, parseInt(day));
+								td.innerHTML = dayArrayMed[date.getDay()] + ".<br />" + day;
+								td.className = "day";
+								td.month = month;
+								td.day = day;
+								td.onclick = function() { deleteDay(this.month, this.day); };
+								var n = 0;
+								for (var time in planny[month][day]) 
+									++n;
+								td.colSpan = n;
+								tr.appendChild(td);
+							}
+						table.appendChild(tr);
+					}
+					
+					{
+						var tr = document.createElement('tr');
+						addUserInvisibleTd(tr);
+						for (var month in planny) 
+							for (var day in planny[month]) 
+								for (var time in planny[month][day]) 
+								{
+									var td = document.createElement('td');
+									td.innerHTML = time.substr(0, 2) + "h" + time.substr(2, 2);
+									td.className = "time";
+									td.month = month;
+									td.day = day;
+									td.time = time;
+									td.onclick = function() { deleteTime(this.month, this.day, this.time); };
+									tr.appendChild(td);
+								}
+						table.appendChild(tr);
+					}
+				}				
+				
+				if (wave.getParticipants())
+				{
+					for (var i = 0; i < wave.getParticipants().length; ++i) 
+					{
+						var tr = document.createElement('tr');
+						{
 							var td = document.createElement('td');
 							td.className = "user";
-							td.innerHTML = users[i];
+							td.innerHTML =  "<img src='"+wave.getParticipants()[i].getThumbnailUrl()+"' /> <b>" + wave.getParticipants()[i].getDisplayName() + "</b>";
 							tr.appendChild(td);
 						}
 						
@@ -950,7 +1008,7 @@
 								for (var time in planny[month][day]) 
 								{
 									var td = document.createElement('td');
-									if (findInArray(planny[month][day][time], users[i])) 
+									if (findInArray(planny[month][day][time], wave.getParticipants()[i].getId())) 
 									{
 										td.className = "OK";
 										td.innerHTML = "OK";
@@ -960,7 +1018,7 @@
 										td.className = "KO";
 										td.innerHTML = "&nbsp;";
 									}
-									if (users[i] == self)
+									if (wave.getViewer() && wave.getViewer().getId() == wave.getParticipants()[i].getId())
 										td.className += " self";
 									tr.appendChild(td);
 								}
@@ -973,67 +1031,107 @@
 			
 			function deleteMonth(month)
 			{
+				if (wave.getMode() != wave.Mode.EDIT)
+					return ;
 				if (planny[month] && confirm("Are you sure you want to delete " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
+				{
 					delete planny[month];
-				createPlannyTable();
+					//createPlannyTable();
+					wave.getState().submitValue('planny', plannyToArray().join(','));
+				}
 			}
 			function deleteDay(month, day)
 			{
+				if (wave.getMode() != wave.Mode.EDIT)
+					return ;
 				var date = new Date();
 				date.setFullYear(parseInt(month.substr(0, 4)), parseInt(month.substr(4, 2)) - 1, parseInt(day));
 				if (planny[month] && planny[month][day] && confirm("Are you sure you want to delete " + dayArrayLong[date.getDay()] + " " + day + " " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
+				{
 					delete planny[month][day];
-				createPlannyTable();
+					//createPlannyTable();
+					wave.getState().submitValue('planny', plannyToArray().join(','));
+				}
 			}
 			function deleteTime(month, day, time)
 			{
+				if (wave.getMode() != wave.Mode.EDIT)
+					return ;
 				var date = new Date();
 				date.setFullYear(parseInt(month.substr(0, 4)), parseInt(month.substr(4, 2)) - 1, parseInt(day));
 				if (planny[month] && planny[month][day] && planny[month][day][time] && confirm("Are you sure you want to delete " + time.substr(0, 2) + "h" + time.substr(2, 2) + " in " + dayArrayLong[date.getDay()] + " " + day + " " + monthArrayLong[parseInt(month.substr(4, 2)) - 1] + " " + month.substr(0, 4) + " ?"))
+				{
 					delete planny[month][day][time];
-				createPlannyTable();
+					//createPlannyTable();
+					wave.getState().submitValue('planny', plannyToArray().join(','));
+				}
 			}
 			
 			function showCal()
 			{
 				displayDatePicker('ADate', false, 'dmy', '.', AddDate.dateHasChanged);
+				gadgets.window.adjustHeight(gadgets.window.getViewportDimensions().height + 135);
+			}
+
+			function init()
+			{
+				createPlannyTable();
+			}
+			gadgets.util.registerOnLoadHandler(init);
+			
+			function setPart()
+			{
+				if (document.getElementById('planny'))
+					createPlannyTable();
 				gadgets.window.adjustHeight();
 			}
+			wave.setParticipantCallback(setPart);
 			
+			function modeChanged()
+			{
+				if (wave.getMode() == wave.Mode.DIFF_ON_OPEN)
+					return ;
+				if (wave.getMode() == wave.Mode.EDIT)
+				{
+					document.getElementById('addDateButton').style.display = "inline";
+					document.getElementById('planny').className = "edit";
+				}
+				else
+				{
+					AddDate.hide();
+					document.getElementById('addDateButton').style.display = "none";
+					document.getElementById('planny').className = "";
+				}
+				gadgets.window.adjustHeight();
+			}
+			wave.setModeCallback(modeChanged);
+			
+			function stateChanged()
+			{
+				if (wave.getState().get('planny') && wave.getState().get('planny') != "")
+				{
+					array = wave.getState().get('planny').split(',');
+					array.sort();
+					arrayToPlanny(array);
+					createPlannyTable();
+				}
+				else
+				{
+					planny = {};
+					createPlannyTable();
+				}
+			}
+			wave.setStateCallback(stateChanged);
 		</script>
 		<table id="planny">
 		</table>
-		<div id="addDate">
-			<button id="addDateText" style="font-size: 10px; border:none; background: none; cursor: pointer;" onClick="AddDate.show()">Add date</button>
-			<div id="addDateForm" style="display: none;">
-				<div id="addDateDivText"></div>
-				<input name="ADate" id="ADate" readonly="readonly" style="width: 80px;" onclick="showCal()" value="Date"/>
-				<select id="addDateSelect" style="width: 150px;" onchange="AddDate.timeHasChanged()"></select>
-				<button type="button" id="addDateButton" style="display: none; margin: 10px auto 5px auto;" onclick="AddDate.add()">Add these dates</button>
-				<button type="button" style="display: block; margin: 10px auto 5px auto;" onclick="AddDate.hide()">Cancel</button>
-			</div>
+		<div id="addDate" style="display: none;">
+			<div id="addDateDivText"></div>
+			<input name="ADate" id="ADate" readonly="readonly" style="width: 80px;" onclick="showCal()" value="Date"/>
+			<select id="addDateSelect" style="width: 150px;" onchange="AddDate.timeHasChanged()"></select>
+			<button type="button" id="addDateValidButton" style="display: none; margin: 10px auto 5px auto;" onclick="AddDate.add()">Add these dates</button>
+			<button type="button" style="display: block; margin: 10px auto 5px auto;" onclick="AddDate.hide()">Cancel</button>
 		</div>
-		<script type="text/javascript">
-			planny = {
-				"200910": {
-					"28": {
-						"1030": ["Salomon", "Jeremy"],
-						"1300": ["Salomon"],
-					},
-					"31": {
-						"1030": ["Jeremy"],
-						"1300": [],
-					}
-				},
-				"200911": {
-					"02": {
-						"0800": ["Salomon", "Jeremy"],
-					}
-				}
-			};
-			self = "Salomon";
-			createPlannyTable()
-		</script>
 
 		
 		]]>
