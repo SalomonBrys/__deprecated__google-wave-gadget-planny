@@ -627,7 +627,7 @@
 			
 			table#planny td.user
 			{
-				width: 200px;
+				width: 180px;
 				background-color: #ECECEC;
 				text-align: right;
 				vertical-align: middle;
@@ -1007,7 +1007,10 @@
 						{
 							var td = document.createElement('td');
 							td.className = "user";
-							td.innerHTML =  "<img src='"+participants[i].getThumbnailUrl()+"' /> <b>" + participants[i].getDisplayName() + "</b>";
+							var displayname = participants[i].getDisplayName();
+							if (displayname.search('@') != -1)
+								displayname = displayname.substr(0, displayname.search('@'));
+							td.innerHTML =  "<img src='"+participants[i].getThumbnailUrl()+"' /> <b>" + displayname + "</b>";
 
 							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
 								td.className += " self";
