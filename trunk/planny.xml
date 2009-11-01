@@ -765,6 +765,7 @@
 						AddDate.selectIsFilled = true;
 						document.getElementById('addDateSelect').disabled = false;
 					}
+					gadgets.window.adjustHeight();
 				},
 				removeTime: function(p)
 				{
