@@ -632,6 +632,12 @@
 				text-align: right;
 				vertical-align: middle;
 			}
+
+			
+			table#planny td.user.self, table#planny td.user.undec.self
+			{
+				background-color: #CCCCCC;
+			}
 			
 			table#planny td.user img
 			{
@@ -647,6 +653,31 @@
 				padding-top: 7px;
 				float: right;
 				font-size: 13px;
+			}
+
+			table#planny td.user.dec:hover
+			{
+				color: red;
+				text-decoration: line-through;
+			}
+
+			table#planny td.user.undec
+			{
+				background-color: White;
+				height: 20px;
+			}
+
+			table#planny td.user.undec img
+			{
+				width: 20px;
+				height: 20px;
+				margin-top: 3px;
+			}
+
+			table#planny td.user.undec b
+			{
+				font-size: 11px;
+				height: 20px;
 			}
 			
 			table#planny td.OK
@@ -670,7 +701,7 @@
 			{
 				cursor: pointer;
 			}
-			
+
 			table#planny td.self.OK:hover
 			{
 				border: dashed #CC4444 2px;
@@ -681,6 +712,28 @@
 			{
 				border: dashed #44CC44 2px;
 				padding: 0;
+			}
+
+			table#planny td.empty
+			{
+				background-color: White;
+				height: 20px;
+				border : none;
+			}
+
+			table#planny td.empty.self
+			{
+				background-color: #ECECEC;
+				height: 20px;
+				border : none;
+				border: solid #8C8C8C 1px;
+				cursor: pointer;
+			}
+			
+			table#planny td.empty.self:hover
+			{
+				background-color: #CCCCCC;
+				font-weight: bold;
 			}
 			
 			div#addDate
@@ -803,7 +856,7 @@
 				selectIsFilled: false,
 				dateHasChanged: function()
 				{
-					if (!AddDate.selectIsFilled) 
+					if (!AddDate.selectIsFilled)
 					{
 						AddDate.fillSelect();
 						AddDate.selectIsFilled = true;
@@ -945,6 +998,7 @@
 					table.appendChild(tr);
 				}
 
+				var nbDays = 0;
 				if (nm != 0)
 				{
 					{
@@ -985,55 +1039,126 @@
 									td.time = time;
 									td.onclick = function() { deleteTime(this.month, this.day, this.time); };
 									tr.appendChild(td);
+									++nbDays;
 								}
-						table.appendChild(tr);
-					}
-				}				
-				
-				if (wave.getParticipants())
-				{
-					for (var i = 0; i < wave.getParticipants().length; ++i) 
-					{
-						var tr = document.createElement('tr');
-						{
-							var td = document.createElement('td');
-							td.className = "user";
-							td.innerHTML =  "<img src='"+wave.getParticipants()[i].getThumbnailUrl()+"' /> <b>" + wave.getParticipants()[i].getDisplayName() + "</b>";
-							tr.appendChild(td);
-						}
-						
-						for (var month in planny) 
-							for (var day in planny[month]) 
-								for (var time in planny[month][day]) 
-								{
-									var td = document.createElement('td');
-									if (findInArray(planny[month][day][time], wave.getParticipants()[i].getId()) != -1) 
-									{
-										td.className = "OK";
-										td.innerHTML = "OK";
-									}
-									else 
-									{
-										td.className = "KO";
-										td.innerHTML = "&nbsp;";
-									}
-									
-									if (wave.getViewer() && wave.getViewer().getId() == wave.getParticipants()[i].getId())
-									{
-										td.month = month;
-										td.day = day;
-										td.time = time;
-										td.onclick = function() { toggleOK(this); }
-
-										td.className += " self";
-									}
-									tr.appendChild(td);
-								}
-						
 						table.appendChild(tr);
 					}
 				}
+
+				if (wave.getParticipants())
+				{
+					var participants = wave.getParticipants();
+					participants.sort(function(left, right)
+					{
+						return left.getDisplayName().toLowerCase() > right.getDisplayName().toLowerCase();
+					});
+
+					var declaredUsers = new Array();
+					if (wave.getState() && wave.getState().get('declared') && wave.getState().get('declared') != "")
+						declaredUsers = wave.getState().get("declared").split(',');
+
+					function addUserTD(tr, id, displayname, url, className)
+					{
+						var td = document.createElement('td');
+						td.className = className;
+						if (displayname.search('@') != -1)
+							displayname = displayname.substr(0, displayname.search('@'));
+						td.innerHTML =  "<img src='"+url+"' /> <b>" + displayname + "</b>";
+
+						if (wave.getViewer() && wave.getViewer().getId() == id)
+						{
+							td.onclick = function() { toggleDeclare(); }
+							td.className += " self";
+						}
+						
+						tr.appendChild(td);
+					}
+					
+					for (var i = 0; i < participants.length; ++i) 
+						if (findInArray(declaredUsers, participants[i].getId()) != -1)
+						{
+							var tr = document.createElement('tr');
+							addUserTD(tr, participants[i].getId(), participants[i].getDisplayName(), participants[i].getThumbnailUrl(), "user dec");
+							
+							for (var month in planny) 
+								for (var day in planny[month]) 
+									for (var time in planny[month][day]) 
+									{
+										var td = document.createElement('td');
+										if (findInArray(planny[month][day][time], participants[i].getId()) != -1) 
+										{
+											td.className = "OK";
+											td.innerHTML = "OK";
+										}
+										else 
+										{
+											td.className = "KO";
+											td.innerHTML = "&nbsp;";
+										}
+										
+										if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
+										{
+											td.month = month;
+											td.day = day;
+											td.time = time;
+											td.onclick = function() { toggleOK(this); }
+	
+											td.className += " self";
+										}
+										tr.appendChild(td);
+									}
+							
+							table.appendChild(tr);
+						}
+
+					for (var i = 0; i < participants.length; ++i) 
+						if (findInArray(declaredUsers, participants[i].getId()) == -1)
+						{
+							var tr = document.createElement('tr');
+							addUserTD(tr, participants[i].getId(), participants[i].getDisplayName(), participants[i].getThumbnailUrl(), "user undec");
+							var td = document.createElement('td');
+							td.className = "empty";
+							td.colSpan = nbDays;
+
+							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
+							{
+								td.onclick = function() { toggleDeclare(); }
+								td.className += " self";
+								td.innerHTML = "Participate";
+							}
+							else
+								td.innerHTML = "&nbsp;";
+							
+							tr.appendChild(td);
+							table.appendChild(tr);
+						}
+				}
 				gadgets.window.adjustHeight();
+			}
+			
+			function toggleDeclare()
+			{
+				var declaredUsers = new Array();
+				if (wave.getState() && wave.getState().get('declared') && wave.getState().get('declared') != "")
+					declaredUsers = wave.getState().get('declared').split(',');
+				var pos = findInArray(declaredUsers, wave.getViewer().getId());
+				if (pos == -1)
+					declaredUsers.push(wave.getViewer().getId());
+				else if (confirm("Are you sure you want to retire from this planny ?"))
+				{
+					delete declaredUsers[pos];
+
+					for (var month in planny) 
+						for (var day in planny[month]) 
+							for (var time in planny[month][day])
+							{
+								var upos = findInArray(planny[month][day][time], wave.getViewer().getId());
+								if (upos != -1)
+									delete planny[month][day][time][upos];
+							}
+					wave.getState().submitValue('planny', plannyToArray().join(','));
+				}
+				wave.getState().submitValue('declared', declaredUsers.join(','));
 			}
 			
 			function toggleOK(td)
