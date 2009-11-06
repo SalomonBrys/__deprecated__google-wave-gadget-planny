@@ -215,11 +215,11 @@ table#planny.small td.time div.cell, table#planny.small td.OK div.cell, table#pl
 	padding-right: 1px;
 }
 
-table#planny.small tr.self td.OK div.cell, table#planny.small tr.self td.OK div.cell:hover {
+table#planny.small tr td.OK div.cell, table#planny.small tr td.OK div.cell:hover {
 	background: #88FF88;
 }
 
-table#planny.small tr.self td.KO div.cell, table#planny.small tr.self td.KO div.cell:hover {
+table#planny.small tr td.KO div.cell, table#planny.small tr td.KO div.cell:hover {
 	background: #FF8888;
 }
 
@@ -243,9 +243,14 @@ table#planny.small td.user div.cell b {
 	font-size: 10px;
 }
 
-table#planny.small td.user.undec, table#planny.small td.empty {
+table#planny.small tr td.user.undec, table#planny.small tr td.empty {
 	background-color: White;
 	height: 12px;
+}
+
+table#planny.small tr.self td.empty div.cell {
+	height: 9px;
+	padding: 1px 3px 0 3px; 
 }
 
 table#planny.small td.user.undec div.cell, table#planny.small td.empty div.cell {
