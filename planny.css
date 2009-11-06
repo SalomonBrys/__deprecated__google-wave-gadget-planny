@@ -123,7 +123,7 @@ table#planny td.user div.cell b {
 	font-size: 13px;
 }
 
-table#planny td.user.dec div.cell:hover {
+table#planny td.user.self.dec div.cell:hover {
 	color: red;
 	text-decoration: line-through;
 }
