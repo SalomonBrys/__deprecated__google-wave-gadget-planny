@@ -1,0 +1,316 @@
+table#planny {
+	font-family: sans-serif;
+	font-size: 12px;
+	float: left;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+table#planny td {
+	height: 40px;
+	width: 40px;
+	border: none;
+	margin: 0;
+	padding: 1px;
+}
+
+table#planny td div.cell {
+	margin: 0;
+	height: 40px;
+	border: solid #8ba0bd 1px;
+	text-align: center;
+	padding: 0 10px;
+	border-spacing: 0;
+}
+
+table#planny td.invisible {
+	border: none;
+}
+
+/*
+76a9e2
+91b7e2
+acc5e2
+c7d4e2
+*/
+
+table#planny td.header {
+	padding: 0 1px;
+}
+
+table#planny td.header div.cell {
+	padding-top: 8px;
+	height: 32px;
+}
+
+table#planny td.month div.cell {
+	background: #91b7e2 url(transimg/year2month.png) repeat-x top left;
+	border-width: 1px 1px 0 1px;
+	margin: 0;
+}
+
+table#planny td.day div.cell {
+	background: #acc5e2 url(transimg/month2day.png) repeat-x top left;
+	border-width: 0 1px;
+	margin: 0;
+}
+
+table#planny td.time {
+	padding-bottom: 1px;
+}
+
+table#planny td.time div.cell {
+	border-bottom-width: 1px;
+	background: #c7d4e2 url(transimg/day2time.png) repeat-x top left;
+	border-width: 0 1px 1px 1px;
+	margin: 0;
+
+	padding-top: 18px;
+	height: 22px;
+}
+
+table#planny.edit td.month:hover,table#planny.edit td.day:hover,table#planny.edit td.time:hover
+{
+	color: red;
+	text-decoration: line-through;
+	cursor: pointer;
+}
+
+table#planny td.user {
+	width: 180px;
+	background-color: #ECECEC;
+	text-align: right;
+	vertical-align: middle;
+}
+
+table#planny tr.self td.user div.cell, table#planny tr.self td.user.undec div.cell {
+	background: #bcd5f0 url(http://ajax.googleapis.com/ajax/libs/dojo/1.3/dijit/themes/soria/images/buttonEnabled.png) repeat-x top left;
+}
+
+table#planny tr.self td.user div.cell:hover, table#planny tr.self:hover td.user.undec div.cell {
+	background: #acc5e2 url(http://ajax.googleapis.com/ajax/libs/dojo/1.3/dijit/themes/soria/images/buttonHover.png) repeat-x top left;
+}
+
+table#planny td.user div.cell {
+	height: 37px;
+	padding-top: 3px;
+}
+
+table#planny tr.self:hover td.user.undec div.cell {
+	color:#243C5F;
+}
+
+table#planny tr.self td.user.undec {
+	padding-right: 0;
+}
+
+table#planny tr.self td.user.undec div.cell {
+	border-right: 0;
+}
+
+
+table#planny td.user div.cell img {
+	width: 34px;
+	height: 34px;
+	float: right;
+	padding-left: 5px;
+}
+
+table#planny td.user div.cell b {
+	display: block;
+	float: right;
+	padding-top: 9px;
+	font-size: 13px;
+}
+
+table#planny td.user.dec div.cell:hover {
+	color: red;
+	text-decoration: line-through;
+}
+
+table#planny td.user.undec, table#planny td.user.undec div.cell {
+	background-color: White;
+	height: 20px;
+}
+
+table#planny td.user.undec div.cell img {
+	width: 18px;
+	height: 18px;
+	padding-top: 1px;
+}
+
+table#planny td.user.undec div.cell b {
+	padding-top: 4px;
+	font-size: 11px;
+}
+
+table#planny td.OK div.cell {
+	background: #88FF88 url(transimg/OK.png) repeat-x bottom left;
+	font-size: 12px;
+	font-weight: bold;
+	color: #008800;
+	border-color: #008800;
+	padding-top: 10px;
+	height: 30px;
+}
+
+table#planny td.KO div.cell {
+	background: #FF8888 url(transimg/KO.png) repeat-x bottom left;
+	border-color: #880000;
+}
+
+table#planny tr.self td div.cell {
+	cursor: pointer;
+}
+
+table#planny tr.self td.OK div.cell:hover {
+	background: #88FF88 url(transimg/KO.png) repeat-x bottom left;
+	border-color: #880000;
+}
+
+table#planny tr.self td.KO div.cell:hover {
+	background: #FF8888 url(transimg/OK.png) repeat-x bottom left;
+	border-color: #008800;
+}
+
+table#planny tr td.empty {
+	background-color: White;
+	height: 20px;
+	border: none;
+}
+
+table#planny tr.self td.empty {
+	padding-left: 0;
+}
+
+table#planny tr.self td.empty div.cell {
+	height: 20px;
+	border: 1px solid #8ba0bd;
+	border-left: none;
+	padding: 3px 5px 0 5px; 
+	background: #bcd5f0 url(http://ajax.googleapis.com/ajax/libs/dojo/1.3/dijit/themes/soria/images/buttonEnabled.png) repeat-x top left;
+}
+
+table#planny tr.self:hover td.empty div.cell {
+	color:#243C5F;
+	background:#acc5e2 url(http://ajax.googleapis.com/ajax/libs/dojo/1.3/dijit/themes/soria/images/buttonHover.png) repeat-x top left;
+	font-weight: bold;
+}
+
+table#planny.small td {
+	font-size: 8px;
+	width: 18px;
+	height: 14px;
+}
+
+table#planny.small td.header div.cell {
+	padding: 0;
+}
+
+table#planny.small td.time div.cell, table#planny.small td.OK div.cell, table#planny.small td.KO div.cell {
+	font-size: 8px;
+	width: 18px;
+	height: 14px;
+	padding: 0;
+	padding-right: 1px;
+}
+
+table#planny.small tr.self td.OK div.cell, table#planny.small tr.self td.OK div.cell:hover {
+	background: #88FF88;
+}
+
+table#planny.small tr.self td.KO div.cell, table#planny.small tr.self td.KO div.cell:hover {
+	background: #FF8888;
+}
+
+
+table#planny.small td.user, table#planny.small td.user div.cell {
+	width: 90px;
+	height: 14px;
+	padding: 0;
+}
+
+table#planny.small td.user div.cell img {
+	width: 12px;
+	height: 12px;
+	padding: 0;
+	padding-left: 1px;
+}
+
+table#planny.small td.user div.cell b {
+	padding-top: 1px;
+	float: right;
+	font-size: 10px;
+}
+
+table#planny.small td.user.undec, table#planny.small td.empty {
+	background-color: White;
+	height: 12px;
+}
+
+table#planny.small td.user.undec div.cell, table#planny.small td.empty div.cell {
+	background-color: White;
+	height: 10px;
+}
+
+table#planny.small td.user.undec div.cell img {
+	width: 8px;
+	height: 8px;
+	padding-top: 1px;
+}
+
+table#planny.small td.user.undec div.cell b {
+	font-size: 9px;
+}
+
+div#addDate {
+	float: left;
+	font-family: sans-serif;
+	font-size: 12px;
+	margin-top: 2px;
+	text-align: center;
+}
+
+div#addDate div#addDateDivText {
+	padding-bottom: 8px;
+}
+
+div#addDate div#addDateDivText p {
+	padding: 2px;
+	margin: 0;
+	font-weight: bold;
+}
+
+div#addDate div#addDateDivText p:hover {
+	color: red;
+	text-decoration: line-through;
+	cursor: pointer;
+}
+
+div#addDate table.hourMenu {
+	font-size: 13px;
+	border: solid 1px #b1badf;
+	margin: 8px auto 0 auto;
+	background-color: White;
+}
+
+div#addDate table.hourMenu td {
+	border: none;
+	padding: 3px;
+	cursor: pointer;
+}
+
+div#addDate table.hourMenu td:hover {
+	background-color: #bed7f0;
+}
+
+div#addDate i#hoursInfo {
+	font-size: 9px;
+	display: block;
+	text-align: left;
+	padding-bottom: 2px;
+}
+
+.plannyMenu {
+	font-size: 13px;
+}
