@@ -295,11 +295,18 @@ function createPlannyTable()
 							div.className = 'cell';
 
 							if (findInArray(planny[month][day][time], participants[i].getId()) != -1)
+							{
 								td.className = "OK";
-							else
-								td.className = "KO";
-							if (td.className == "OK" || ( wave.getViewer() && wave.getViewer().getId() == participants[i].getId()))
 								div.innerHTML = "<b>OK</b>";
+							}
+							else
+							{
+								td.className = "KO";
+								if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
+									div.innerHTML = "<b>OK</b>";
+								else
+									div.innerHTML = "OUPS";
+							}
 
 							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
 							{
