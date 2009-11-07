@@ -305,7 +305,7 @@ function createPlannyTable()
 								if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
 									div.innerHTML = "<b>OK</b>";
 								else
-									div.innerHTML = "OUPS";
+									div.innerHTML = "&nbsp";
 							}
 
 							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())

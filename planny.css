@@ -171,7 +171,7 @@ table#planny tr.self td.OK div.cell:hover {
 	border-color: #880000;
 }
 
-ttable#planny tr.self td.OK div.cell:hover b {
+table#planny tr.self td.OK div.cell:hover b {
 	display: none;
 }
 
@@ -180,7 +180,7 @@ table#planny tr.self td.KO div.cell:hover {
 	border-color: #008800;
 }
 
-table#planny tr.self td.OK div.cell:hover b {
+table#planny tr.self td.KO div.cell:hover b {
 	display: block;
 }
 
