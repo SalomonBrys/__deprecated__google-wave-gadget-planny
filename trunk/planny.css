@@ -144,14 +144,17 @@ table#planny td.user.undec div.cell b {
 	font-size: 11px;
 }
 
+table#planny td.OK div.cell b, table#planny td.KO div.cell b {
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	padding-top: 10px;
+	color: #008800;
+}
+
 table#planny td.OK div.cell {
 	background: #88FF88 url(transimg/OK.png) repeat-x bottom left;
-	font-size: 12px;
-	font-weight: bold;
-	color: #008800;
 	border-color: #008800;
-	padding-top: 10px;
-	height: 30px;
 }
 
 table#planny td.KO div.cell {
@@ -159,8 +162,8 @@ table#planny td.KO div.cell {
 	border-color: #880000;
 }
 
-table#planny tr.self td div.cell {
-	cursor: pointer;
+table#planny td.KO div.cell b {
+	display: none;
 }
 
 table#planny tr.self td.OK div.cell:hover {
@@ -168,9 +171,21 @@ table#planny tr.self td.OK div.cell:hover {
 	border-color: #880000;
 }
 
+table#planny td.OK div.cell:hover b {
+	display: none;
+}
+
 table#planny tr.self td.KO div.cell:hover {
 	background: #FF8888 url(transimg/OK.png) repeat-x bottom left;
 	border-color: #008800;
+}
+
+table#planny td.KO div.cell:hover b {
+	display: block;
+}
+
+table#planny tr.self td div.cell {
+	cursor: pointer;
 }
 
 table#planny tr td.empty {
