@@ -298,8 +298,8 @@ function createPlannyTable()
 								td.className = "OK";
 							else
 								td.className = "KO";
-							if (td.className == "OK" || wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
-							div.innerHTML = "<b>OK</b>";
+							if (td.className == "OK" || ( wave.getViewer() && wave.getViewer().getId() == participants[i].getId()))
+								div.innerHTML = "<b>OK</b>";
 
 							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
 							{
