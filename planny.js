@@ -295,15 +295,10 @@ function createPlannyTable()
 							div.className = 'cell';
 
 							if (findInArray(planny[month][day][time], participants[i].getId()) != -1)
-							{
 								td.className = "OK";
-								div.innerHTML = "OK";
-							}
 							else
-							{
 								td.className = "KO";
-								div.innerHTML = "&nbsp;";
-							}
+							div.innerHTML = "<b>OK</b>";
 
 							if (wave.getViewer() && wave.getViewer().getId() == participants[i].getId())
 							{
