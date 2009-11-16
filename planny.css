@@ -70,7 +70,7 @@ table#planny.edit td.month:hover,table#planny.edit td.day:hover,table#planny.edi
 }
 
 table#planny td.user {
-	width: 180px;
+	width: 200px;
 	background-color: #ECECEC;
 	text-align: right;
 	vertical-align: middle;
