@@ -27,13 +27,6 @@ table#planny td.invisible {
 	border: none;
 }
 
-/*
-76a9e2
-91b7e2
-acc5e2
-c7d4e2
-*/
-
 table#planny td.header {
 	padding: 0 1px;
 }
@@ -223,11 +216,15 @@ table#planny.small td.header div.cell {
 }
 
 table#planny.small td.time div.cell, table#planny.small td.OK div.cell, table#planny.small td.KO div.cell {
-	font-size: 8px;
 	width: 18px;
 	height: 14px;
 	padding: 0;
 	padding-right: 1px;
+}
+
+table#planny.small td.OK div.cell b, table#planny.small td.KO div.cell b {
+	padding-top: 2px;
+	font-size: 8px;
 }
 
 table#planny.small tr td.OK div.cell, table#planny.small tr td.OK div.cell:hover {
