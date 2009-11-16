@@ -74,6 +74,7 @@ table#planny td.user {
 	background-color: #ECECEC;
 	text-align: right;
 	vertical-align: middle;
+	overflow: hidden;
 }
 
 table#planny tr.self td.user div.cell, table#planny tr.self td.user.undec div.cell {
@@ -101,7 +102,6 @@ table#planny tr.self td.user.undec div.cell {
 	border-right: 0;
 }
 
-
 table#planny td.user div.cell img {
 	width: 34px;
 	height: 34px;
@@ -111,7 +111,7 @@ table#planny td.user div.cell img {
 
 table#planny td.user div.cell b {
 	display: block;
-	padding-top: 9px;
+	padding-top: 8px;
 	font-size: 13px;
 }
 
