@@ -101,23 +101,24 @@ function plannyToArray()
 
 function arrayToPlanny(array)
 {
-	planny = {};
+	var newPlanny = {};
 	for ( var i = 0; i < array.length; ++i)
 	{
 		var dt = array[i].split(' ');
 		var month = dt[0];
 		var day = dt[1];
 		var time = dt[2];
-		if (!planny[month])
-			planny[month] = {};
-		if (!planny[month][day])
-			planny[month][day] = {};
-		if (!planny[month][day][time])
-			planny[month][day][time] = new Array();
+		if (!newPlanny[month])
+			newPlanny[month] = {};
+		if (!newPlanny[month][day])
+			newPlanny[month][day] = {};
+		if (!newPlanny[month][day][time])
+			newPlanny[month][day][time] = new Array();
 
 		if (dt[3])
-			planny[month][day][time] = dt[3].split(':');
+			newPlanny[month][day][time] = dt[3].split(':');
 	}
+	planny = newPlanny;
 }
 
 function findInArray(array, value)
@@ -247,11 +248,36 @@ function createPlannyTable()
 
 	if (wave.getParticipants())
 	{
-		var participants = wave.getParticipants();
+		var pts = wave.getParticipants();
+		var participants = new Array();
+		// Manual sort due to chrome shuffle sort
+		{
+			var ptsIN = new Array();
+			
+			var p = {}
+			while (p)
+			{
+				p = null;
+				for (var i = 0; i < pts.length; ++i)
+					if (findInArray(ptsIN, pts[i].getId()) == -1)
+						if (!p || pts[i].getDisplayName().toLowerCase() < p.getDisplayName().toLowerCase())
+							p = pts[i];
+				if (p)
+				{
+					participants.push(p);
+					ptsIN.push(p.getId());
+				}
+			}
+		}
+		/*
 		participants.sort(function(left, right)
 		{
-			return left.getDisplayName().toLowerCase() > right.getDisplayName().toLowerCase();
+			//return left.getDisplayName().toLowerCase() - right.getDisplayName().toLowerCase();
+			return true;
 		});
+		*/
+
+		//participants = wave.getParticipants();
 
 		var declaredUsers = new Array();
 		if (wave.getState() && wave.getState().get('declared') && wave.getState().get('declared') != "")
@@ -280,7 +306,7 @@ function createPlannyTable()
 			tr.appendChild(td);
 		}
 
-		for ( var i = 0; i < participants.length; ++i)
+		for (var i = 0; i < participants.length; ++i)
 			if (findInArray(declaredUsers, participants[i].getId()) != -1)
 			{
 				var tr = document.createElement('tr');
@@ -327,7 +353,7 @@ function createPlannyTable()
 				table.appendChild(tr);
 			}
 
-		for ( var i = 0; i < participants.length; ++i)
+		for (var i = 0; i < participants.length; ++i)
 			if (findInArray(declaredUsers, participants[i].getId()) == -1)
 			{
 				var tr = document.createElement('tr');
