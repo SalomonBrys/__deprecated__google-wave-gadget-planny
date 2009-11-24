@@ -64,7 +64,7 @@ AddDate = {
 	{
 		var datetimes = new Array();
 		var els = dojo.byId('addDateDivText').childNodes;
-		for ( var i = 0; i < els.length; ++i)
+		for (var i = 0; i < els.length; ++i)
 			if (els[i].tagName == 'p' || els[i].tagName == 'P')
 			{
 				var dt = els[i].innerHTML.split(' ');
@@ -74,7 +74,7 @@ AddDate = {
 			}
 
 		array = plannyToArray();
-		for ( var i = 0; i < array.length; ++i)
+		for (var i = 0; i < array.length; ++i)
 			datetimes.push(array[i]);
 
 		datetimes.sort();
@@ -87,9 +87,9 @@ AddDate = {
 function plannyToArray()
 {
 	var array = new Array();
-	for ( var month in planny)
-		for ( var day in planny[month])
-			for ( var time in planny[month][day])
+	for (var month in planny)
+		for (var day in planny[month])
+			for (var time in planny[month][day])
 			{
 				var txt = month + ' ' + day + ' ' + time
 				if (planny[month][day][time].length != 0)
@@ -101,28 +101,29 @@ function plannyToArray()
 
 function arrayToPlanny(array)
 {
-	planny = {};
-	for ( var i = 0; i < array.length; ++i)
+	var newPlanny = {};
+	for (var i = 0; i < array.length; ++i)
 	{
 		var dt = array[i].split(' ');
 		var month = dt[0];
 		var day = dt[1];
 		var time = dt[2];
-		if (!planny[month])
-			planny[month] = {};
-		if (!planny[month][day])
-			planny[month][day] = {};
-		if (!planny[month][day][time])
-			planny[month][day][time] = new Array();
+		if (!newPlanny[month])
+			newPlanny[month] = {};
+		if (!newPlanny[month][day])
+			newPlanny[month][day] = {};
+		if (!newPlanny[month][day][time])
+			newPlanny[month][day][time] = new Array();
 
 		if (dt[3])
-			planny[month][day][time] = dt[3].split(':');
+			newPlanny[month][day][time] = dt[3].split(':');
 	}
+	planny = newPlanny;
 }
 
 function findInArray(array, value)
 {
-	for ( var i = 0; i < array.length; ++i)
+	for (var i = 0; i < array.length; ++i)
 		if (array[i] == value)
 			return i;
 	return -1;
@@ -154,13 +155,36 @@ function createPlannyTable()
 		tr.appendChild(td);
 	}
 
+	// Chrome does not give back the proprieties with for..in the same order we put them. So we need to re-force the sort...
+	var months = new Array();
+	var days = {};
+	var times = {};
+	for (var month in planny)
+	{
+		months.push(month);
+		days[month] = new Array();
+		times[month] = {}
+		for (var day in planny[month])
+		{
+			days[month].push(day);
+			times[month][day] = new Array();
+			for (var time in planny[month][day])
+				times[month][day].push(time);
+			times[month][day].sort();
+		}
+		days[month].sort();
+	}
+	months.sort();
+
 	var nm = 0;
 	{
 		var tr = document.createElement('tr');
 
 		addUserInvisibleTd(tr, true);
-		for ( var month in planny)
+//		for (var month in planny)
+		for (var m = 0; m < months.length; ++m)
 		{
+			var month = months[m];
 			++nm;
 			var td = document.createElement('td');
 			td.className = "header month";
@@ -173,8 +197,8 @@ function createPlannyTable()
 				deleteMonth(this.month);
 			};
 			var n = 0;
-			for ( var day in planny[month])
-				for ( var time in planny[month][day])
+			for (var day in planny[month])
+				for (var time in planny[month][day])
 					++n;
 			td.colSpan = n;
 			
@@ -190,9 +214,14 @@ function createPlannyTable()
 		{
 			var tr = document.createElement('tr');
 			addUserInvisibleTd(tr);
-			for ( var month in planny)
-				for ( var day in planny[month])
+//			for (var month in planny)
+			for (var m = 0; m < months.length; ++m)
+			{
+				var month = months[m];
+//				for (var day in planny[month])
+				for (var d = 0; d < days[month].length; ++d)
 				{
+					var day = days[month][d];
 					var td = document.createElement('td');
 					td.className = "header day";
 					var div = document.createElement('div');
@@ -207,23 +236,32 @@ function createPlannyTable()
 						deleteDay(this.month, this.day);
 					};
 					var n = 0;
-					for ( var time in planny[month][day])
+					for (var time in planny[month][day])
 						++n;
 					td.colSpan = n;
 
 					td.appendChild(div);
 					tr.appendChild(td);
 				}
+			}
 			table.appendChild(tr);
 		}
 
 		{
 			var tr = document.createElement('tr');
 			addUserInvisibleTd(tr);
-			for ( var month in planny)
-				for ( var day in planny[month])
-					for ( var time in planny[month][day])
+//			for (var month in planny)
+			for (var m = 0; m < months.length; ++m)
+			{
+				var month = months[m];
+//				for (var day in planny[month])
+				for (var d = 0; d < days[month].length; ++d)
+				{
+					var day = days[month][d];
+//					for (var time in planny[month][day])
+					for (var t = 0; t < times[month][day].length; ++t)
 					{
+						var time = times[month][day][t];
 						var td = document.createElement('td');
 						td.className = "header time";
 						var div = document.createElement('div');
@@ -241,17 +279,44 @@ function createPlannyTable()
 						tr.appendChild(td);
 						++nbDays;
 					}
+				}
+			}
 			table.appendChild(tr);
 		}
 	}
 
 	if (wave.getParticipants())
 	{
-		var participants = wave.getParticipants();
+		var pts = wave.getParticipants();
+		var participants = new Array();
+		// Manual sort due to chrome shuffle sort
+		{
+			var ptsIN = new Array();
+			
+			var p = {}
+			while (p)
+			{
+				p = null;
+				for (var i = 0; i < pts.length; ++i)
+					if (findInArray(ptsIN, pts[i].getId()) == -1)
+						if (!p || pts[i].getDisplayName().toLowerCase() < p.getDisplayName().toLowerCase())
+							p = pts[i];
+				if (p)
+				{
+					participants.push(p);
+					ptsIN.push(p.getId());
+				}
+			}
+		}
+		/*
 		participants.sort(function(left, right)
 		{
-			return left.getDisplayName().toLowerCase() > right.getDisplayName().toLowerCase();
+			//return left.getDisplayName().toLowerCase() - right.getDisplayName().toLowerCase();
+			return true;
 		});
+		*/
+
+		//participants = wave.getParticipants();
 
 		var declaredUsers = new Array();
 		if (wave.getState() && wave.getState().get('declared') && wave.getState().get('declared') != "")
@@ -280,16 +345,24 @@ function createPlannyTable()
 			tr.appendChild(td);
 		}
 
-		for ( var i = 0; i < participants.length; ++i)
+		for (var i = 0; i < participants.length; ++i)
 			if (findInArray(declaredUsers, participants[i].getId()) != -1)
 			{
 				var tr = document.createElement('tr');
 				addUserTD(tr, participants[i].getId(), participants[i].getDisplayName(), participants[i].getThumbnailUrl(), "user dec");
 
-				for ( var month in planny)
-					for ( var day in planny[month])
-						for ( var time in planny[month][day])
+//				for (var month in planny)
+				for (var m = 0; m < months.length; ++m)
+				{
+					var month = months[m];
+//					for (var day in planny[month])
+					for (var d = 0; d < days[month].length; ++d)
+					{
+						var day = days[month][d];
+//						for (var time in planny[month][day])
+						for (var t = 0; t < times[month][day].length; ++t)
 						{
+							var time = times[month][day][t];
 							var td = document.createElement('td');
 							var div = document.createElement('div');
 							div.className = 'cell';
@@ -323,11 +396,13 @@ function createPlannyTable()
 							td.appendChild(div);
 							tr.appendChild(td);
 						}
+					}
+				}
 
 				table.appendChild(tr);
 			}
 
-		for ( var i = 0; i < participants.length; ++i)
+		for (var i = 0; i < participants.length; ++i)
 			if (findInArray(declaredUsers, participants[i].getId()) == -1)
 			{
 				var tr = document.createElement('tr');
@@ -372,9 +447,9 @@ function toggleDeclare()
 	{
 		delete declaredUsers[pos];
 
-		for ( var month in planny)
-			for ( var day in planny[month])
-				for ( var time in planny[month][day])
+		for (var month in planny)
+			for (var day in planny[month])
+				for (var time in planny[month][day])
 				{
 					var upos = findInArray(planny[month][day][time], wave.getViewer().getId());
 					if (upos != -1)
